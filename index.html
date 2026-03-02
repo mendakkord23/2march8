@@ -59,18 +59,30 @@
 }
     
 
-    h1{
-      margin:0 0 10px 0;
-      font-size: clamp(28px, 4vw, 40px);
-      letter-spacing: 0.2px;
-    }
+    h1{h1{
+  margin: 0 0 12px;
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 600;
+
+  background: linear-gradient(135deg, #7a3e2d, #a85c3d, #5c2f22);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  text-shadow:
+    0 2px 6px rgba(120,60,40,0.25);
+}
 
     p{
-      margin: 6px 0;
-      font-size: clamp(15px, 2.4vw, 18px);
-      color: var(--muted);
-      line-height: 1.45;
-    }
+  font-size: clamp(16px, 2.4vw, 18px);
+  line-height: 1.6;
+
+  background: linear-gradient(135deg, #6b3a2c, #8f4e3a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  text-shadow:
+    0 1px 4px rgba(120,70,50,0.2);
+}
 
     .btn{
       margin-top:16px;
