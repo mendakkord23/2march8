@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>С 8 Марта 💐</title>
+
+  <style>
+    :root{
+      --glass: rgba(255,255,255,0.22);
+      --glass-border: rgba(255,255,255,0.35);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.78);
+    }
+
+    body{
+      margin:0;
+      height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      overflow:hidden;
+
+      /* нежный градиент */
+      background:
+        radial-gradient(1200px 800px at 20% 20%, rgba(255,255,255,0.25), transparent 55%),
+        radial-gradient(900px 700px at 80% 30%, rgba(255,255,255,0.18), transparent 55%),
+        linear-gradient(135deg, #ffb7c5, #ffd6a5, #d7f7ff, #e6d7ff);
+      background-size: cover;
+
+      opacity:0;
+      animation: fadeIn 1.6s forwards;
+    }
+
+    @keyframes fadeIn { to { opacity:1; } }
+
+    .card{
+      width:min(520px, 92vw);
+      padding:28px 22px;
+      border-radius:28px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 18px 60px rgba(0,0,0,0.18);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      text-align:center;
+      position:relative;
+      z-index:2;
+    }
+
+    h1{
+      margin:0 0 10px 0;
+      font-size: clamp(28px, 4vw, 40px);
+      letter-spacing: 0.2px;
+    }
+
+    p{
+      margin: 6px 0;
+      font-size: clamp(15px, 2.4vw, 18px);
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .btn{
+      margin-top:16px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding:14px 20px;
+      border:none;
+      border-radius:999px;
+      cursor:pointer;
+      font-size:16px;
+      color:#2b2b2b;
+      background: rgba(255,255,255,0.85);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+      transition: transform .12s ease, background .12s ease;
+      user-select:none;
+    }
+    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,0.92); }
+    .btn:active{ transform: translateY(0px) scale(0.99); }
+
+    .hint{
+      margin-top:10px;
+      font-size: 13px;
+      opacity: 0.85;
+    }
+
+    /* летающие элементы */
+    .float{
+      position:absolute;
+      top:-10vh;
+      z-index:1;
+      pointer-events:none;
+      will-change: transform;
+      animation-name: fall;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.10));
+    }
+
+    @keyframes fall{
+      from { transform: translateY(-15vh) rotate(0deg); }
+      to   { transform: translateY(120vh) rotate(360deg); }
+    }
+
+    /* чуть “живой” фон */
+    .glow{
+      position:absolute;
+      inset:-20%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.12), transparent 45%),
+                  radial-gradient(circle at 70% 60%, rgba(255,255,255,0.10), transparent 50%);
+      animation: drift 10s ease-in-out infinite alternate;
+      z-index:0;
+      pointer-events:none;
+    }
+    @keyframes drift{
+      from { transform: translate(0,0) scale(1); }
+      to   { transform: translate(2%, -2%) scale(1.03); }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="glow"></div>
+
+  <div class="card">
+    <h1 id="title"></h1>
+    <p id="message"></p>
+
+    <button class="btn" id="playBtn">
+      ▶️ Включить музыку
+    </button>
+
+    <div class="hint">Если звук не пошёл — нажми кнопку ещё раз (браузеры иногда вредничают).</div>
+
+    <audio id="music" preload="auto">
+      <!-- ВАЖНО: тут должно быть точное имя твоего mp3 файла в репозитории -->
+      <source src="Akvarium_-_Ne_mogu_otorvat_glaz_ot_tebya_47955055.mp3" type="audio/mpeg">
+    </audio>
+  </div>
+
+  <script>
+    // 1) Нежный "печатный" текст (без имён)
+    const titleText = "С 8 Марта 💐";
+    const msgText   = "Пусть этот день будет тёплым, лёгким и светлым. Улыбок, заботы и хорошего настроения ❤️";
+
+    function typeInto(el, text, speed=55){
+      el.textContent = "";
+      let i = 0;
+      const timer = setInterval(() => {
+        el.textContent += text.charAt(i);
+        i++;
+        if(i >= text.length) clearInterval(timer);
+      }, speed);
+    }
+
+    typeInto(document.getElementById("title"), titleText, 65);
+    setTimeout(() => typeInto(document.getElementById("message"), msgText, 25), 650);
+
+    // 2) Воспроизведение по кнопке + громкость
+    const btn = document.getElementById("playBtn");
+    const music = document.getElementById("music");
+
+    btn.addEventListener("click", async () => {
+      try{
+        music.volume = 0.25; // <-- тут тише/громче: 0.15..0.35 обычно идеально
+        await music.play();
+        btn.textContent = "🎵 Музыка играет";
+        btn.disabled = true;
+        btn.style.opacity = "0.85";
+        btn.style.cursor = "default";
+      }catch(e){
+        // если браузер капризничает — просто повторный клик поможет
+        btn.textContent = "Нажми ещё раз ▶️";
+      }
+    });
+
+    // 3) Летающие цветочки + маленькие сердечки (универсально, мило)
+    const emojis = ["🌸","🌷","🌼","💗","🌺","💖"];
+    const count = 26;
+
+    for(let i=0; i<count; i++){
+      const el = document.createElement("div");
+      el.className = "float";
+      el.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+
+      const left = Math.random() * 100; // vw
+      const size = 14 + Math.random()*14; // px
+      const duration = 6 + Math.random()*8; // s
+      const delay = Math.random()*4; // s
+
+      el.style.left = left + "vw";
+      el.style.fontSize = size + "px";
+      el.style.animationDuration = duration + "s";
+      el.style.animationDelay = (-delay) + "s"; // чтобы часть уже "летела"
+      el.style.opacity = (0.45 + Math.random()*0.45).toFixed(2);
+
+      document.body.appendChild(el);
+    }
+  </script>
+</body>
+</html>
